@@ -2,7 +2,7 @@
 
 //Operation check 2015/11/06
 //use processing 3.0 
-//run sample https://www.youtube.com/watch?v=wlIiOlMpxOI&feature=youtu.be
+//run sample https://youtu.be/kg50DgrhW2g
 
 //The following article is very useful
 //ref https://forum.processing.org/two/discussion/3949/real-time-graph-plotting
