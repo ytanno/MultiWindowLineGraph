@@ -13,6 +13,9 @@ SecondApplet second;
 int[] plot1;
 int[] plot2;
 
+//if input up key, Stop Draw Chart
+boolean _DrawStop = false;
+
 void settings() 
 {
   size(400, 400);
@@ -29,18 +32,30 @@ void setup()
 
 void draw() 
 {
+  if(_DrawStop) return;
   drawStuff(); //clear drawed windows
 
-  // beginning to avoid overwriting the data
-  for (int i = plot1.length-1; i > 0; i--) 
+  /*  
+   for (int i = plot1.length-1; i > 0; i--) 
+   {
+   plot1[i] = plot1[i-1];
+   plot2[i] = plot2[i-1];
+   }
+   plot1[0] = mouseY;
+   plot2[0] = mouseX;
+   */
+
+  for (int i = 1; i < plot1.length; i++) 
   {
-    plot1[i] = plot1[i-1];
-    plot2[i] = plot2[i-1];
+    plot1[i-1] = plot1[i];
+    plot2[i-1] = plot2[i];
   }
+
+
   // Add new values to the beginning
-  plot1[0] = mouseY;
-  plot2[1] = mouseX;
-  println(plot1[0]); 
+  plot1[plot1.length -1] = mouseY;
+  plot2[plot2.length -1] = mouseX;
+  // println(plot1[0]); 
   // Display each pair of values as a line
   for (int i = 1; i < plot1.length; i++) 
   {
@@ -56,24 +71,35 @@ void drawStuff()
   background(255);
   for (int i = 0; i <= width; i += 50) 
   {
-    fill(0, 255, 0);
+    fill(0, 0, 0);
     text(i/2, i-10, height-15);
     stroke(0);
     line(i, height, i, 0);
   }
   for (int j = 0; j < height; j += 140) 
   {
-    fill(0, 255, 0);
+    fill(0, 0, 0);
     text(6-j/(height/6), 0, j);
     stroke(0);
     line(0, j, width, j);
   }
 }
 
+void keyPressed() 
+{
+  if (key == CODED) 
+  {
+    if (keyCode == UP) 
+    {
+      _DrawStop = !_DrawStop;
+    }
+  }
+}
+
 class SecondApplet extends PApplet 
 {
   PApplet parent;
-  int[] plot2;
+  int[] plot1;
 
   SecondApplet(PApplet _parent) {
     super();
@@ -102,27 +128,32 @@ class SecondApplet extends PApplet
   }
 
   void setup() {
-    plot2 = new int[width];
+    plot1 = new int[width];
   }
 
   void draw() 
   {
-    background(0);
     drawStuff(); //clear drawed windows
 
-    // beginning to avoid overwriting the data
+
+    /*
     for (int i = plot1.length-1; i > 0; i--) 
+     {
+     plot1[i] = plot1[i-1];
+     }
+     plot1[0] = mouseY ;
+     */
+
+    for (int i = 1; i < plot1.length; i++) 
     {
-      plot2[i] = plot2[i-1];
+      plot1[i-1] = plot1[i];
     }
-    // Add new values to the beginning
-    plot2[0] = mouseY ;
-    println(plot2[0]); 
-    // Display each pair of values as a line
+    plot1[plot1.length -1] = mouseY ;
+
     for (int i = 1; i < plot1.length; i++) 
     {
       stroke(255, 0, 0); //Red
-      line(i, plot2[i], i-1, plot2[i-1]);
+      line(i, plot1[i], i-1, plot1[i-1]);
     }
   }
 
@@ -131,13 +162,13 @@ class SecondApplet extends PApplet
     background(255);
     for (int i = 0; i <= width; i += 50) 
     {
-      fill(0, 255, 0);
+      fill(0, 0, 0);
       text(i/2, i-10, height-15);
       stroke(0);
       line(i, height, i, 0);
     }
     for (int j = 0; j < height; j += 140) {
-      fill(0, 255, 0);
+      fill(0, 0, 0);
       text(6-j/(height/6), 0, j);
       stroke(0);
       line(0, j, width, j);
